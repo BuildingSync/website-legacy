@@ -1,0 +1,528 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <title>Schema documentation for </title>
+      <link rel="stylesheet" href="docHtml.css" type="text/css" /><script type="text/javascript">
+         <!--
+        
+      
+        var button_prefix = 'button_';
+        
+        /**
+        * Returns an element in the current HTML document.
+        *
+        * @param elementID Identifier of HTML element
+        * @return               HTML element object
+        */
+        function getElementObject(elementID) {
+            var elemObj = null;
+            if (document.getElementById) {
+                elemObj = document.getElementById(elementID);
+            }
+            return elemObj;
+        }
+        
+        /**
+        * Switches the state of a collapseable box, e.g.
+        * if it's opened, it'll be closed, and vice versa.
+        *
+        * @param boxID Identifier of box
+        */
+        function switchState(boxID) {
+            var boxObj = getElementObject(boxID);
+            var buttonObj = getElementObject(button_prefix + boxID);
+            if (boxObj == null || buttonObj == null) {
+                // Box or button not found
+            } else if (boxObj.style.display == "none") {
+                // Box is closed, so open it
+                openBox(boxObj, buttonObj);
+            } else if (boxObj.style.display == "block") {
+                // Box is opened, so close it
+                closeBox(boxObj, buttonObj);
+            }
+        }
+        
+        /**
+        * Opens a collapseable box.
+        *
+        * @param boxObj       Collapseable box
+        * @param buttonObj Button controlling box
+        */
+        function openBox(boxObj, buttonObj) {
+            if (boxObj == null || buttonObj == null) {
+                // Box or button not found
+            } else {
+                // Change 'display' CSS property of box
+                boxObj.style.display = "block";
+                
+                // Change text of button
+                if (boxObj.style.display == "block") {
+                    buttonObj.src = "img/btM.gif";
+                }
+            }
+        }
+        
+        /**
+        * Closes a collapseable box.
+        *
+        * @param boxObj       Collapseable box
+        * @param buttonObj Button controlling box
+        */
+        function closeBox(boxObj, buttonObj) {
+            if (boxObj == null || buttonObj == null) {
+                // Box or button not found
+            } else {
+                // Change 'display' CSS property of box
+                boxObj.style.display = "none";
+                
+                // Change text of button
+                if (boxObj.style.display == "none") {
+                    buttonObj.src = "img/btP.gif";
+                }
+            }
+        }
+    
+       function switchStateForAll(buttonObj, boxList) {
+            if (buttonObj == null) {
+                // button not found
+            } else if (buttonObj.value == "+") {
+                // Expand all
+                expandAll(boxList);
+                buttonObj.value = "-";
+            } else if (buttonObj.value == "-") {
+                // Collapse all
+                collapseAll(boxList);
+                buttonObj.value = "+";
+            }
+        }
+        
+        /**
+        * Closes all boxes in a given list.
+        *
+        * @param boxList Array of box IDs
+        */
+        function collapseAll(boxList) {
+            var idx;
+            for (idx = 0; idx < boxList.length; idx++) {
+                var boxObj = getElementObject(boxList[idx]);
+                var buttonObj = getElementObject(button_prefix + boxList[idx]);
+                closeBox(boxObj, buttonObj);
+            }
+        }
+            
+        /**
+        * Open all boxes in a given list.
+        *
+        * @param boxList Array of box IDs
+        */
+        function expandAll(boxList) {
+            var idx;
+            for (idx = 0; idx < boxList.length; idx++) {
+                var boxObj = getElementObject(boxList[idx]);
+                var buttonObj = getElementObject(button_prefix + boxList[idx]);
+                openBox(boxObj, buttonObj);
+            }
+        }
+        
+        /**
+         * Update the message presented in the title of the html page.
+         * - If the documentation was splited by namespace we present something like: "Documentation for namespace 'ns'"
+         * - If the documentation was splited by location we present somehing like: "Documentation for 'Schema.xsd'"
+         * - If no split we always present: "Documentation for 'MainSchema.xsd'"
+         */
+        function updatePageTitle(message) {
+            top.document.title = message;
+        }
+        
+          
+                    
+         /**
+          * Finds an HTML element by its ID and makes it floatable over the normal content.
+          *
+          * @param x_displacement The difference in pixels to the right side of the window from 
+          *           the left side of the element.
+          * @param y_displacement The difference in pixels to the right side of the window from 
+          *           the top of the element.          
+          */
+         function findAndFloat(id, x_displacement, y_displacement){
+
+            var element = getElementObject(id);            
+            
+            window[id + "_obj"] = element;
+            
+            if(document.layers) {
+               element.style = element;
+            }
+            
+            element.current_y = y_displacement;      
+            element.first_time = true;
+         
+            element.floatElement = function(){
+               // It may be closed by an user action.
+                
+               // Target X and Y coordinates.
+               var x, y;
+               
+               var myWidth = 0, myHeight = 0;
+               if( typeof( window.innerWidth ) == 'number' ) {
+                  //Non-IE
+                  myWidth = window.innerWidth;
+                  myHeight = window.innerHeight;
+               } else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
+                  //IE 6+ in 'standards compliant mode'
+                  myWidth = document.documentElement.clientWidth;
+                  myHeight = document.documentElement.clientHeight;
+               } else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) {
+                  //IE 4 compatible
+                  myWidth = document.body.clientWidth;
+                  myHeight = document.body.clientHeight;
+               }
+               
+               
+               x = myWidth - x_displacement;
+               
+               var ns = (navigator.appName.indexOf("Netscape") != -1);               
+               y = ns ? pageYOffset : document.documentElement && document.documentElement.scrollTop ? 
+                  document.documentElement.scrollTop : document.body.scrollTop;               
+               y = y + y_displacement;               
+               
+               // The current y is the current coordinate of the floating element.
+               // This should be at the limit the y target coordinate.
+               this.current_y += (y - this.current_y)/1.25;
+               
+               // Add the pixels constant after the values
+               // and move the element.
+               var px = document.layers ? "" : "px";
+               this.style.left =  x + px;
+               this.style.top =  this.current_y + px;
+                              
+               setTimeout(this.id + "_obj.floatElement()", 100);
+            }
+            
+            element.floatElement();
+            return element;
+          }
+
+         /**
+          * Finds an HTML element by its ID and makes it floatable over the normal content.
+          *
+          * @param x_displacement The difference in pixels to the right side of the window from 
+          *           the left side of the element.
+          * @param y_displacement The difference in pixels to the right side of the window from 
+          *           the top of the element.          
+          */
+         function selectTOCGroupBy(id, isChunked, indexFileLocation, indexFileNamespace, indexFileComponent){
+
+            if (!isChunked) {
+             var selectIds = new Array('toc_group_by_namespace', 'toc_group_by_location', 'toc_group_by_component_type');
+             // Make all the tabs invisible.
+               for (i = 0; i < 3; i++){
+                  var tab = getElementObject(selectIds[i]);
+                  tab.style.display = 'none';
+               }
+               var selTab = getElementObject(id);
+               selTab.style.display = 'block';
+            } else {
+             if (id == 'toc_group_by_namespace') {
+               parent.indexFrame.location = indexFileNamespace;
+             } else  if (id == 'toc_group_by_location') {
+               parent.indexFrame.location = indexFileLocation;
+             } else  if (id == 'toc_group_by_component_type') {
+              parent.indexFrame.location = indexFileComponent;
+             }
+            }
+         }
+          
+
+    
+                    //--></script></head>
+   <body>
+      <h2><a id="INDEX">Table of Contents</a></h2>
+      <div class="toc">
+         <form action="none">
+            <div><span> Group by: <select id="selectTOC" onchange="selectTOCGroupBy(this.options[this.selectedIndex].value, true, 'index.indexList.html', 'index.indexListns.html', 'index.indexListcomp.html');">
+                     <option value="toc_group_by_namespace">Namespace</option>
+                     <option value="toc_group_by_location" selected="selected">Location</option>
+                     <option value="toc_group_by_component_type">Component Type</option></select></span></div>
+         </form>
+         <div class="level1" id="toc_group_by_location" style="display:block">
+            <div>
+               <div class="level2">
+                  <p><input id="button_gr_BuildingSync_1_0.xsd" type="image" value="-" src="img/btM.gif" onclick="switchState('gr_BuildingSync_1_0.xsd');" class="control" /><span class="indexGroupTitle">BuildingSync_1_0.xsd</span></p>
+                  <div id="gr_BuildingSync_1_0.xsd" style="display:block">
+                     <div class="horizontalLayout">
+                        <table class="rt">
+                           <tr>
+                              <td class="rt_cornerTopLeft"></td>
+                              <td class="rt_lineTop"></td>
+                              <td class="rt_cornerTopRight"></td>
+                           </tr>
+                           <tr>
+                              <td class="rt_lineLeft"></td>
+                              <td class="rt_content">
+                                 <table class="componentGroup">
+                                    <tbody>
+                                       <tr>
+                                          <td class="componentGroup"><input id="button_gr_BuildingSync_1_0.xsdElement" type="image" value="-" src="img/btM.gif" onclick="switchState('gr_BuildingSync_1_0.xsdElement');" class="control" /></td>
+                                          <td class="componentGroup">
+                                             <div class="componentGroupTitle">Elements</div>
+                                          </td>
+                                       </tr>
+                                       <tr>
+                                          <td class="componentGroup"></td>
+                                          <td class="componentGroup">
+                                             <div id="gr_BuildingSync_1_0.xsdElement" class="componentGroup" style="display:block">
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#Address" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:Address</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#AssetScore" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:AssetScore</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#Audits" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:Audits</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#CalculationMethod" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:CalculationMethod</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#Capacity" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:Capacity</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#CapacityUnits" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:CapacityUnits</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#ContactEmailAddress" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:ContactEmailAddress</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#ControlTechnology" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:ControlTechnology</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#ControlledByEMCS" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:ControlledByEMCS</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#DutyCycle" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:DutyCycle</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#ENERGYSTARScore" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:ENERGYSTARScore</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#FloorAreas" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:FloorAreas</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#IdentifierCustomName" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:IdentifierCustomName</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#IdentifierLabel" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:IdentifierLabel</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#IdentifierValue" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:IdentifierValue</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#LinkedPremises" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:LinkedPremises</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#Location" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:Location</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#Manufacturer" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:Manufacturer</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#ModelNumber" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:ModelNumber</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#OccupancyClassification" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:OccupancyClassification</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#OccupancyLevels" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:OccupancyLevels</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#Ownership" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:Ownership</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#OwnershipStatus" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:OwnershipStatus</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#PremisesIdentifiers" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:PremisesIdentifiers</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#PremisesName" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:PremisesName</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#PremisesNotes" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:PremisesNotes</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#PrimaryContactID" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:PrimaryContactID</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#PrimaryFuel" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:PrimaryFuel</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#Qualifier" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:Qualifier</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#Quantity" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:Quantity</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#ReferenceCase" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:ReferenceCase</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#Refrigerant" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:Refrigerant</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#Resource" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:Resource</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#ResourceUnits" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:ResourceUnits</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#SideNumber" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:SideNumber</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#SystemPerformanceRatio" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:SystemPerformanceRatio</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#ThirdPartyCertification" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:ThirdPartyCertification</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#UserDefinedFields" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:UserDefinedFields</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#YearInstalled" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:YearInstalled</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#YearofManufacture" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:YearofManufacture</a></b></div>
+                                             </div>
+                                          </td>
+                                       </tr>
+                                    </tbody>
+                                 </table>
+                              </td>
+                              <td class="rt_lineRight"></td>
+                           </tr>
+                           <tr>
+                              <td class="rt_cornerBottomLeft"></td>
+                              <td class="rt_lineBottom"></td>
+                              <td class="rt_cornerBottomRight"></td>
+                           </tr>
+                        </table>
+                     </div>
+                     <div class="horizontalLayout">
+                        <table class="rt">
+                           <tr>
+                              <td class="rt_cornerTopLeft"></td>
+                              <td class="rt_lineTop"></td>
+                              <td class="rt_cornerTopRight"></td>
+                           </tr>
+                           <tr>
+                              <td class="rt_lineLeft"></td>
+                              <td class="rt_content">
+                                 <table class="componentGroup">
+                                    <tbody>
+                                       <tr>
+                                          <td class="componentGroup"><input id="button_gr_BuildingSync_1_0.xsdComplex_Type" type="image" value="-" src="img/btM.gif" onclick="switchState('gr_BuildingSync_1_0.xsdComplex_Type');" class="control" /></td>
+                                          <td class="componentGroup">
+                                             <div class="componentGroupTitle">Complex Types</div>
+                                          </td>
+                                       </tr>
+                                       <tr>
+                                          <td class="componentGroup"></td>
+                                          <td class="componentGroup">
+                                             <div id="gr_BuildingSync_1_0.xsdComplex_Type" class="componentGroup" style="display:block">
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#AirDistributionSystemType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:AirDistributionSystemType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#AllResourceTotalType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:AllResourceTotalType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#BlockType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:BlockType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#CalculationMethodType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:CalculationMethodType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#CommercialFacilityType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:CommercialFacilityType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#CondenserTypeType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:CondenserTypeType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#ContactType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:ContactType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#ConveyanceSystemType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:ConveyanceSystemType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#CookingSystemType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:CookingSystemType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#CoolingPlantTypeType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:CoolingPlantTypeType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#CriticalITSystemType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:CriticalITSystemType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#DishwasherSystemType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:DishwasherSystemType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#DomesticHotWaterSystemType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:DomesticHotWaterSystemType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#FanSystemType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:FanSystemType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#FenestrationSystemType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:FenestrationSystemType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#FoundationSystemType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:FoundationSystemType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#HVACSystemType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:HVACSystemType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#HeatRecoverySystemType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:HeatRecoverySystemType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#LaundrySystemType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:LaundrySystemType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#LightingSystemType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:LightingSystemType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#MeasureType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:MeasureType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#MotorSystemType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:MotorSystemType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#OnSiteStorageTransmissionGenerationSystemType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:OnSiteStorageTransmissionGenerationSystemType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#OtherHVACSystemType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:OtherHVACSystemType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#PlugLoadType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:PlugLoadType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#PoolType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:PoolType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#ProcessLoadType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:ProcessLoadType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#PumpSystemType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:PumpSystemType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#RefrigerationSystemType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:RefrigerationSystemType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#ResourceUseType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:ResourceUseType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#RoofCeilingSystemType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:RoofCeilingSystemType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#ScenarioType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:ScenarioType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#ScheduleType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:ScheduleType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#SiteType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:SiteType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#SpaceType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:SpaceType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#TimeSeriesType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:TimeSeriesType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#WallSystemType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:WallSystemType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#WaterUseType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:WaterUseType</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#ZoneType" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:ZoneType</a></b></div>
+                                             </div>
+                                          </td>
+                                       </tr>
+                                    </tbody>
+                                 </table>
+                              </td>
+                              <td class="rt_lineRight"></td>
+                           </tr>
+                           <tr>
+                              <td class="rt_cornerBottomLeft"></td>
+                              <td class="rt_lineBottom"></td>
+                              <td class="rt_cornerBottomRight"></td>
+                           </tr>
+                        </table>
+                     </div>
+                     <div class="horizontalLayout">
+                        <table class="rt">
+                           <tr>
+                              <td class="rt_cornerTopLeft"></td>
+                              <td class="rt_lineTop"></td>
+                              <td class="rt_cornerTopRight"></td>
+                           </tr>
+                           <tr>
+                              <td class="rt_lineLeft"></td>
+                              <td class="rt_content">
+                                 <table class="componentGroup">
+                                    <tbody>
+                                       <tr>
+                                          <td class="componentGroup"><input id="button_gr_BuildingSync_1_0.xsdSimple_Type" type="image" value="-" src="img/btM.gif" onclick="switchState('gr_BuildingSync_1_0.xsdSimple_Type');" class="control" /></td>
+                                          <td class="componentGroup">
+                                             <div class="componentGroupTitle">Simple Types</div>
+                                          </td>
+                                       </tr>
+                                       <tr>
+                                          <td class="componentGroup"></td>
+                                          <td class="componentGroup">
+                                             <div id="gr_BuildingSync_1_0.xsdSimple_Type" class="componentGroup" style="display:block">
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#FuelTypes" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:FuelTypes</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#State" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:State</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#TelephoneNumber" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:TelephoneNumber</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#ZipCode" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">auc:ZipCode</a></b></div>
+                                             </div>
+                                          </td>
+                                       </tr>
+                                    </tbody>
+                                 </table>
+                              </td>
+                              <td class="rt_lineRight"></td>
+                           </tr>
+                           <tr>
+                              <td class="rt_cornerBottomLeft"></td>
+                              <td class="rt_lineBottom"></td>
+                              <td class="rt_cornerBottomRight"></td>
+                           </tr>
+                        </table>
+                     </div>
+                     <div class="horizontalLayout">
+                        <table class="rt">
+                           <tr>
+                              <td class="rt_cornerTopLeft"></td>
+                              <td class="rt_lineTop"></td>
+                              <td class="rt_cornerTopRight"></td>
+                           </tr>
+                           <tr>
+                              <td class="rt_lineLeft"></td>
+                              <td class="rt_content">
+                                 <table class="componentGroup">
+                                    <tbody>
+                                       <tr>
+                                          <td class="componentGroup"><input id="button_gr_BuildingSync_1_0.xsdAttribute" type="image" value="-" src="img/btM.gif" onclick="switchState('gr_BuildingSync_1_0.xsdAttribute');" class="control" /></td>
+                                          <td class="componentGroup">
+                                             <div class="componentGroupTitle">Attributes</div>
+                                          </td>
+                                       </tr>
+                                       <tr>
+                                          <td class="componentGroup"></td>
+                                          <td class="componentGroup">
+                                             <div id="gr_BuildingSync_1_0.xsdAttribute" class="componentGroup" style="display:block">
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#Source" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">@auc:Source</a></b></div>
+                                                <div><b><a href="BuildingSync_1_0_xsd.html#Status" target="mainFrame" title="http://nrel.gov/schemas/bedes-auc/2014" onclick="updatePageTitle('Schema documentation for BuildingSync_1_0.xsd')">@auc:Status</a></b></div>
+                                             </div>
+                                          </td>
+                                       </tr>
+                                    </tbody>
+                                 </table>
+                              </td>
+                              <td class="rt_lineRight"></td>
+                           </tr>
+                           <tr>
+                              <td class="rt_cornerBottomLeft"></td>
+                              <td class="rt_lineBottom"></td>
+                              <td class="rt_cornerBottomRight"></td>
+                           </tr>
+                        </table>
+                     </div>
+                     <div style="clear:left"></div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="footer">
+         <hr />
+         <div align="center">XML Schema documentation generated by <a href="http://www.oxygenxml.com" target="_parent"><span class="oXygenLogo"><span class="redX">&lt;</span>o<span class="redX">X</span>ygen<span class="redX">/&gt;</span></span></a><sup>®</sup> XML Editor.
+         </div>
+      </div><script type="text/javascript">
+         <!--
+                     // The namespace is the selected option in the TOC combo.
+                    
+                     // Floats the toolbar.
+                     var globalControls = getElementObject("global_controls"); 
+                     
+                     if(globalControls != null){
+	                     var browser=navigator.appName;
+						 var version = parseFloat(navigator.appVersion.split('MSIE')[1]);
+						 
+						 var IE6 = false;
+						 if ((browser=="Microsoft Internet Explorer") && (version < 7)){
+						 	IE6 = true;
+						 }
+	
+	                     //alert (IE6 + " |V| " + version);
+	                     
+	                     if(IE6){
+	                     	// On IE 6 the 'fixed' property is not supported. We must use javascript. 
+	                         globalControls.style.position='absolute';                         
+	                         // The global controls will do not exist in the TOC frame, when chunking.
+	                         findAndFloat("global_controls", 225, 30);    
+	                     } else {
+	                      	  globalControls.style.position='fixed';                     	
+	                     }
+	                     
+	                     globalControls.style.right='0';                       
+                     }
+                //--></script></body>
+</html>
